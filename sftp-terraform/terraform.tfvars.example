@@ -1,0 +1,12 @@
+create_server          = true
+secrets_manager_region = ""
+
+# Your EXISTING S3 bucket — no new bucket will be created
+sftp_s3_bucket = "sftp-kameshsk-bucket"
+
+# Add or remove users here freely
+# Each user gets their own secret in Secrets Manager
+sftp_users = {
+  "kameshskuser" = { password = "Secure@123" }
+  # "anotheruser" = { password = "AnotherPass@123" }
+}
