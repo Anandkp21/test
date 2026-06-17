@@ -3,17 +3,26 @@ version: 0.2
 phases:
   install:
     commands:
-      - wget https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip
-      - unzip terraform_1.7.0_linux_amd64.zip
+      - echo "=== Installing Terraform ==="
+      - wget -q https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip
+      - unzip -q terraform_1.7.0_linux_amd64.zip
       - mv terraform /usr/local/bin/
       - terraform --version
 
   build:
     commands:
+      - echo "=== Running Terraform Init ==="
       - terraform init
-      - terraform plan -out=tfplan
+      - echo "=== Running Terraform Plan ==="
+      - terraform plan -var-file="terraform.tfvars" -out=tfplan
+      - echo "=== Saving plan output for review ==="
+      - terraform show -no-color tfplan > tfplan.txt
+      - cat tfplan.txt
 
 artifacts:
   files:
     - '**/*'
     - tfplan
+    - tfplan.txt
+  exclude-paths:
+    - '.terraform/providers/**'
