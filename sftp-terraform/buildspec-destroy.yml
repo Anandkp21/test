@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+
+  install:
+    commands:
+      - wget -q https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip
+      - unzip -q terraform_1.7.0_linux_amd64.zip
+      - mv terraform /usr/local/bin/
+      - terraform --version
+
+  build:
+    commands:
+      - cd sftp-terraform
+      # Restore state file from S3 before destroy
+      - aws s3 cp s3://terraform-pipeline-artifacts-46674914611/tfstate/terraform.tfstate terraform.tfstate
+      - echo "State file restored from S3"
+      - terraform init
+      - terraform destroy -var-file="terraform.tfvars" -auto-approve
